@@ -3,6 +3,7 @@ package de.curano.explosionapi.annotations;
 import io.github.classgraph.*;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,7 +27,26 @@ public class AnnotationProcessor {
                         if (Arrays.stream(clazz.getInterfaces()).toList().contains(CommandExecutor.class)) {
                             Command command = clazz.getAnnotation(Command.class);
                             if (!command.name().equals("")) {
-                                Objects.requireNonNull(plugin.getCommand(command.name())).setExecutor((CommandExecutor) clazz.getConstructor().newInstance());
+                                PluginCommand pluginCommand = plugin.getCommand(command.name());
+                                pluginCommand.setExecutor((CommandExecutor) clazz.getConstructor().newInstance());
+                                if (command.aliases().length != 0) {
+                                    pluginCommand.setAliases(Arrays.asList(command.aliases()));
+                                }
+                                if (!command.description().equals("")) {
+                                    pluginCommand.setDescription(command.description());
+                                }
+                                if (!command.label().equals("")) {
+                                    pluginCommand.setLabel(command.label());
+                                }
+                                if (!command.permission().equals("")) {
+                                    pluginCommand.setUsage(command.permission());
+                                }
+                                if (!command.permissionMessage().equals("")) {
+                                    pluginCommand.setUsage(command.permissionMessage());
+                                }
+                                if (!command.usage().equals("")) {
+                                    pluginCommand.setUsage(command.usage());
+                                }
                             }
                         }
                     }

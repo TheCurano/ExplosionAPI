@@ -14,8 +14,6 @@ public class ExplosionAPI {
             enabled = true;
         }
         AnnotationProcessor.processRegister(plugin);
-
-
     }
 
     public static void unregister(JavaPlugin plugin) {
