@@ -1,6 +1,8 @@
 package de.curano.explosionapi;
 
 import de.curano.explosionapi.annotations.AnnotationProcessor;
+import de.curano.explosionapi.items.ItemEvents;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -12,6 +14,8 @@ public class ExplosionAPI {
     public static void register(JavaPlugin plugin) {
         if (!enabled) {
             enabled = true;
+
+            Bukkit.getPluginManager().registerEvents(new ItemEvents(), plugin);
         }
         AnnotationProcessor.processRegister(plugin);
     }
