@@ -1,9 +1,11 @@
 plugins {
     id 'java'
+    id 'maven-publish'
+    id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
 group 'de.curano'
-version '1.0-SNAPSHOT'
+version '1.0'
 
 repositories {
     mavenLocal()
@@ -22,6 +24,18 @@ dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT'
 
     implementation group: 'io.github.classgraph', name: 'classgraph', version: '4.8.147'
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'de.curano'
+            artifactId = 'explosionapi'
+            version = '1.0'
+
+            from components.java
+        }
+    }
 }
 
 test {
