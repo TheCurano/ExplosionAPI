@@ -18,11 +18,15 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 
+    // Lombok
+    implementation 'org.projectlombok:lombok:1.18.22'
+
     // Minecraft
     compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
     compileOnly 'org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT'
     compileOnly 'org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT'
 
+    // Reflections
     implementation group: 'io.github.classgraph', name: 'classgraph', version: '4.8.147'
 }
 
