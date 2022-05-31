@@ -5,14 +5,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.Objects;
 
 public class AnnotationProcessor {
 
@@ -57,7 +53,6 @@ public class AnnotationProcessor {
                     if (classInfo.hasAnnotation(Events.class)) {
                         Class<?> clazz = classInfo.loadClass();
                         if (Arrays.stream(clazz.getInterfaces()).toList().contains(Listener.class)) {
-                            Events events = clazz.getAnnotation(Events.class);
                             Bukkit.getPluginManager().registerEvents((Listener) clazz.getConstructor().newInstance(), plugin);
                         }
                     }

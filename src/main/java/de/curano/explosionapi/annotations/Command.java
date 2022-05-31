@@ -1,12 +1,9 @@
 package de.curano.explosionapi.annotations;
 
-import org.bukkit.command.TabCompleter;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.List;
 
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
