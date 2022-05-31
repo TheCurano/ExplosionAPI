@@ -2,7 +2,6 @@ package de.curano.explosionapi.items;
 
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.event.entity.ItemMergeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -21,22 +20,41 @@ import java.util.function.Consumer;
 
 public class EItemStack extends ItemStack implements Serializable {
 
+    private void markItem() {
+        ItemMeta meta = this.getItemMeta();
+        PersistentDataContainer persistentDataContainer = meta.getPersistentDataContainer();
+        persistentDataContainer.set(new NamespacedKey("explosionapi", "explosion-item"), PersistentDataType.STRING, "true");
+        setItemMeta(meta);
+    }
 
     public EItemStack(Material material) {
         super(material);
+        markItem();
     }
 
     public EItemStack(Material material, int amount) {
         super(material, amount);
+        markItem();
     }
 
     public EItemStack(Material material, int amount, String displayName) {
         super(material, amount);
         setDisplayName(displayName);
+        markItem();
     }
 
     public EItemStack(ItemStack itemStack) {
         super(itemStack);
+    }
+
+    @Override
+    public boolean setItemMeta(ItemMeta meta) {
+        assert meta != null;
+        PersistentDataContainer persistentDataContainer = meta.getPersistentDataContainer();
+        if (!persistentDataContainer.has(new NamespacedKey("explosionapi", "explosion-item"), PersistentDataType.STRING)) {
+            persistentDataContainer.set(new NamespacedKey("explosionapi", "explosion-item"), PersistentDataType.STRING, "true");
+        }
+        return super.setItemMeta(meta);
     }
 
     public void setDisplayName(String displayName) {
@@ -73,15 +91,16 @@ public class EItemStack extends ItemStack implements Serializable {
         if (consumer != null) {
             ItemMeta meta = this.getItemMeta();
             PersistentDataContainer persistentDataContainer = meta.getPersistentDataContainer();
-            persistentDataContainer.set(new NamespacedKey("ExplosionAPI", "explosion-inventoryclick"), PersistentDataType.STRING, consumer);
+            persistentDataContainer.set(new NamespacedKey("explosionapi", "explosion-inventoryclick"), PersistentDataType.STRING, consumer);
+            this.setItemMeta(meta);
         }
     }
 
     public SerializableConsumer<InventoryClickEvent> getInventoryClickEvent() {
         ItemMeta meta = this.getItemMeta();
         PersistentDataContainer persistentDataContainer = meta.getPersistentDataContainer();
-        if (persistentDataContainer.has(new NamespacedKey("ExplosionAPI", "explosion-inventoryclick"), PersistentDataType.STRING)) {
-            String data = persistentDataContainer.get(new NamespacedKey("ExplosionAPI", "explosion-inventoryclick"), PersistentDataType.STRING);
+        if (persistentDataContainer.has(new NamespacedKey("explosionapi", "explosion-inventoryclick"), PersistentDataType.STRING)) {
+            String data = persistentDataContainer.get(new NamespacedKey("explosionapi", "explosion-inventoryclick"), PersistentDataType.STRING);
             try {
                 ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));
                 BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
@@ -89,7 +108,7 @@ public class EItemStack extends ItemStack implements Serializable {
                 dataInput.close();
                 return inventoryClickEvent;
             } catch (Exception e) {
-                System.out.println(data);
+                System.out.println("Error Data: " + data);
                 e.printStackTrace();
             }
         }
@@ -117,26 +136,23 @@ public class EItemStack extends ItemStack implements Serializable {
         if (consumer != null) {
             ItemMeta meta = this.getItemMeta();
             PersistentDataContainer persistentDataContainer = meta.getPersistentDataContainer();
-            persistentDataContainer.set(new NamespacedKey("ExplosionAPI", "explosion-playerinteract"), PersistentDataType.STRING, consumer);
+            persistentDataContainer.set(new NamespacedKey("explosionapi", "explosion-playerinteract"), PersistentDataType.STRING, consumer);
         }
     }
 
     public SerializableConsumer<PlayerInteractEvent> getPlayerInteractEvent() {
         ItemMeta meta = this.getItemMeta();
         PersistentDataContainer persistentDataContainer = meta.getPersistentDataContainer();
-        if (persistentDataContainer.has(new NamespacedKey("ExplosionAPI", "explosion-playerinteract"), PersistentDataType.STRING)) {
-            String data = persistentDataContainer.get(new NamespacedKey("ExplosionAPI", "explosion-playerinteract"), PersistentDataType.STRING);
+        if (persistentDataContainer.has(new NamespacedKey("explosionapi", "explosion-playerinteract"), PersistentDataType.STRING)) {
+            String data = persistentDataContainer.get(new NamespacedKey("explosionapi", "explosion-playerinteract"), PersistentDataType.STRING);
             try {
                 ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));
                 BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
-
                 SerializableConsumer<PlayerInteractEvent> playerInteractEvent = (SerializableConsumer<PlayerInteractEvent>) dataInput.readObject();
-
-
                 dataInput.close();
                 return playerInteractEvent;
             } catch (Exception e) {
-                System.out.println(data);
+                System.out.println("Error Data: " + data);
                 e.printStackTrace();
             }
         }
