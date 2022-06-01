@@ -27,14 +27,25 @@ public final class MyPlugin extends JavaPlugin {
 
 ```Java
 // Es muss nur der Name definiert werden
-@Command(name = "test", aliases = {"t", "testing"}, description = "Test command", permission = "test.command", permissionMessage = "Permission Message", usage = "/test")
-public class TestCommand implements CommandExecutor {
+@ECommand(name = "test", aliases = {"t", "testing"}, description = "Test command", permission = "test.command", permissionMessage = "Permission Message", usage = "/test")
+public class TestCommand extends Command {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
+    public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String[] args) throws IllegalArgumentException {
+        return super.tabComplete(sender, alias, args);
+    }
 
+    // Verpflichtend
+    public TestCommand(@NotNull String name) {
+        super(name);
+    }
+
+    @Override
+    public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
+        return true;
     }
 }
+
 ```
 
 ## Events
