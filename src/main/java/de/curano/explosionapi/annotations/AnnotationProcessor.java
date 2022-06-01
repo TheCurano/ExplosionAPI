@@ -2,11 +2,13 @@ package de.curano.explosionapi.annotations;
 
 import io.github.classgraph.*;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.PluginCommand;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandMap;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
@@ -18,13 +20,23 @@ public class AnnotationProcessor {
             ClassInfoList classInfos = scanResult.getAllClasses();
             for (ClassInfo classInfo : classInfos) {
                 try {
-                    if (classInfo.hasAnnotation(Command.class)) {
+                    if (classInfo.hasAnnotation(ECommand.class)) {
                         Class<?> clazz = classInfo.loadClass();
-                        if (Arrays.stream(clazz.getInterfaces()).toList().contains(CommandExecutor.class)) {
-                            Command command = clazz.getAnnotation(Command.class);
+
+                        int constructorLen = -1;
+                        Constructor<?> constructor = null;
+                        for (Constructor<?> constr : clazz.getConstructors()) {
+                            constructorLen = constr.getParameterCount();
+                            if (constructorLen == 1 && constr.getParameterTypes()[0].equals(String.class)) {
+                                constructor = constr;
+                                break;
+                            }
+                        }
+
+                        if (clazz.getSuperclass().equals(Command.class) && constructorLen == 1) {
+                            ECommand command = clazz.getAnnotation(ECommand.class);
                             if (!command.name().equals("")) {
-                                PluginCommand pluginCommand = plugin.getCommand(command.name());
-                                pluginCommand.setExecutor((CommandExecutor) clazz.getConstructor().newInstance());
+                                org.bukkit.command.Command pluginCommand = (org.bukkit.command.Command) constructor.newInstance(command.name());
                                 if (command.aliases().length != 0) {
                                     pluginCommand.setAliases(Arrays.asList(command.aliases()));
                                 }
@@ -43,6 +55,11 @@ public class AnnotationProcessor {
                                 if (!command.usage().equals("")) {
                                     pluginCommand.setUsage(command.usage());
                                 }
+                                final Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+
+                                bukkitCommandMap.setAccessible(true);
+                                CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
+                                commandMap.register(command.name(), pluginCommand);
                             }
                         }
                     }

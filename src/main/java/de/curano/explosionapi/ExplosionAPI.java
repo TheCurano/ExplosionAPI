@@ -10,9 +10,12 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.logging.Logger;
+
 public class ExplosionAPI {
 
     public static final String VERSION = "1.0";
+    public static final Logger LOGGER = Bukkit.getLogger();
     private static boolean enabled = false;
 
     public static void register(JavaPlugin plugin) {

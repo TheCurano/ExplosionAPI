@@ -1,5 +1,6 @@
 package de.curano.explosionapi.items;
 
+import de.curano.explosionapi.ExplosionAPI;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -18,6 +19,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.logging.Level;
 
 public class EItemStack extends ItemStack implements Serializable {
 
@@ -116,7 +118,7 @@ public class EItemStack extends ItemStack implements Serializable {
                 dataInput.close();
                 return inventoryClickEvent;
             } catch (Exception e) {
-                System.out.println("Error Data: " + data);
+                ExplosionAPI.LOGGER.log(Level.WARNING, "ExplosionAPI Error Data: " + data);
                 e.printStackTrace();
             }
         }
@@ -162,7 +164,7 @@ public class EItemStack extends ItemStack implements Serializable {
                 dataInput.close();
                 return playerInteractEvent;
             } catch (Exception e) {
-                System.out.println("Error Data: " + data);
+                ExplosionAPI.LOGGER.log(Level.WARNING, "ExplosionAPI Error Data: " + data);
                 e.printStackTrace();
             }
         }
