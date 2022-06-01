@@ -61,3 +61,21 @@ public class Events implements Listener {
 
 }
 ```
+
+## Items
+
+```Java
+public class Test {
+    public void function(Player player) {
+        EItemStack item = new EItemStack(Material.STONE);
+        item.setLore(List.of("Zeile 1", "Zeile 2"));
+        item.setInventoryClickEvent(event -> {
+            event.setCancelled(true);
+        });
+        item.setPlayerInteractEvent(event -> {
+            event.setCancelled(true);
+        });
+        player.getInventory().addItem(item);
+    }
+}
+```
