@@ -47,6 +47,12 @@ public class EItemStack extends ItemStack implements Serializable {
         markItem();
     }
 
+    public EItemStack(Material material, String displayName) {
+        super(material);
+        setDisplayName(displayName);
+        markItem();
+    }
+
     public EItemStack(ItemStack itemStack) {
         super(itemStack);
     }
@@ -61,11 +67,12 @@ public class EItemStack extends ItemStack implements Serializable {
         return super.setItemMeta(itemMeta);
     }
 
-    public void setDisplayName(String displayName) {
+    public EItemStack setDisplayName(String displayName) {
         ItemMeta itemMeta = this.getItemMeta();
-        if (itemMeta == null) return;
+        if (itemMeta == null) return this;
         itemMeta.setDisplayName(displayName);
         this.setItemMeta(itemMeta);
+        return this;
     }
 
     public String getDisplayName() {
@@ -73,11 +80,12 @@ public class EItemStack extends ItemStack implements Serializable {
         return this.getItemMeta().getDisplayName();
     }
 
-    public void setLore(List<String> lore) {
+    public EItemStack setLore(List<String> lore) {
         ItemMeta itemMeta = this.getItemMeta();
-        if (itemMeta == null) return;
+        if (itemMeta == null) return this;
         itemMeta.setLore(lore);
         this.setItemMeta(itemMeta);
+        return this;
     }
 
     public List<String> getLore() {
@@ -85,7 +93,7 @@ public class EItemStack extends ItemStack implements Serializable {
         return this.getItemMeta().getLore();
     }
 
-    public void setInventoryClickEvent(SerializableConsumer<InventoryClickEvent> event) {
+    public EItemStack setInventoryClickEvent(SerializableConsumer<InventoryClickEvent> event) {
         String consumer = null;
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -98,11 +106,12 @@ public class EItemStack extends ItemStack implements Serializable {
         }
         if (consumer != null) {
             ItemMeta meta = this.getItemMeta();
-            if (meta == null) return;
+            if (meta == null) return this;
             PersistentDataContainer persistentDataContainer = meta.getPersistentDataContainer();
             persistentDataContainer.set(new NamespacedKey("explosionapi", "explosion-inventoryclick"), PersistentDataType.STRING, consumer);
             this.setItemMeta(meta);
         }
+        return this;
     }
 
     public SerializableConsumer<InventoryClickEvent> getInventoryClickEvent() {
@@ -132,7 +141,7 @@ public class EItemStack extends ItemStack implements Serializable {
         }
     }
 
-    public void setPlayerInteractEvent(SerializableConsumer<PlayerInteractEvent> event) {
+    public EItemStack setPlayerInteractEvent(SerializableConsumer<PlayerInteractEvent> event) {
         String consumer = null;
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -145,10 +154,11 @@ public class EItemStack extends ItemStack implements Serializable {
         }
         if (consumer != null) {
             ItemMeta meta = this.getItemMeta();
-            if (meta == null) return;
+            if (meta == null) return this;
             PersistentDataContainer persistentDataContainer = meta.getPersistentDataContainer();
             persistentDataContainer.set(new NamespacedKey("explosionapi", "explosion-playerinteract"), PersistentDataType.STRING, consumer);
         }
+        return this;
     }
 
     public SerializableConsumer<PlayerInteractEvent> getPlayerInteractEvent() {

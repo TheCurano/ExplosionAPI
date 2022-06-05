@@ -51,6 +51,7 @@ public class TestCommand extends Command {
 ## Events
 
 ```Java
+
 @Events
 public class Events implements Listener {
 
@@ -67,15 +68,31 @@ public class Events implements Listener {
 ```Java
 public class Test {
     public void function(Player player) {
-        EItemStack item = new EItemStack(Material.STONE);
-        item.setLore(List.of("Zeile 1", "Zeile 2"));
-        item.setInventoryClickEvent(event -> {
-            event.setCancelled(true);
-        });
+        EItemStack item = new EItemStack(Material.STONE, "Name")
+                .setLore(List.of("Zeile 1", "Zeile 2"))
+                .setInventoryClickEvent(event -> {
+                    event.setCancelled(true);
+                });
         item.setPlayerInteractEvent(event -> {
             event.setCancelled(true);
         });
         player.getInventory().addItem(item);
+    }
+}
+```
+
+## Base64Converter
+### (Object to String / String to Object)
+### Know that only Objects which implements Serializable are supported!
+### Items have there own function, because they need a specific handling.
+
+```Java
+public class Test {
+    public void function(Object object, ItemStack itemStack) {
+        String base64Object = Base64Converter.toString(object);
+        String base64Item = Base64Converter.fullItemStackToString(itemStack);
+        Object oldObject = Base64Converter.fromString(base64Object);
+        ItemStack oldItem = Base64Converter.fromStringToItemStack(base64Item);
     }
 }
 ```
