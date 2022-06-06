@@ -1,4 +1,4 @@
-# AngelZCraft-Main-API
+# ExplosionAPI
 
 ## Introduction
 
