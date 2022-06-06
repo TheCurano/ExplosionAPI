@@ -1,5 +1,6 @@
-package de.curano.explosionapi.items;
+package de.curano.explosionapi;
 
+import de.curano.explosionapi.items.PDCObject;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
