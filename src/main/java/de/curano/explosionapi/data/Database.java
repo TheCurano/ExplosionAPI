@@ -5,6 +5,7 @@ import com.zaxxer.hikari.HikariDataSource;
 
 import java.sql.*;
 import java.util.Properties;
+import java.util.function.Consumer;
 
 public class Database {
 
@@ -132,6 +133,14 @@ public class Database {
         }
     }
 
+    public void execute(String sql, boolean newThread) {
+        if (newThread) {
+            new Thread(() -> execute(sql)).start();
+        } else {
+            execute(sql);
+        }
+    }
+
     public ResultSet executeQuery(String sql) {
         try {
             if (type == DatabaseType.MARIADB_CONNECTION) {
@@ -149,6 +158,12 @@ public class Database {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void executeQuery(String sql, Consumer<ResultSet> back) {
+        new Thread(() -> {
+            back.accept(executeQuery(sql));
+        }).start();
     }
 
     public PreparedStatement prepareStatement(String sql) {
