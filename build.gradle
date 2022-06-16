@@ -26,6 +26,10 @@ dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT'
     compileOnly 'org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT'
 
+    // Database
+    implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.7.3'
+    implementation group: 'com.zaxxer', name: 'HikariCP', version: '5.0.1'
+
     // Reflections
     implementation group: 'io.github.classgraph', name: 'classgraph', version: '4.8.147'
 }
