@@ -23,24 +23,29 @@ public class DBManager {
      * Create Tables if they don't exist
      * Syntax: tablesname(name type, ...)
      * Example: test(id int, name varchar(255))
+     *
      * @param tables
      * @return instance
      */
     public DBManager createTable(String... tables) {
-        for (String table : tables) {
-            this.database.execute("CREATE TABLE IF NOT EXISTS " + database.getDatabaseName() + "." + table + ";");
-        }
+        new Thread(() -> {
+            for (String table : tables) {
+                this.database.execute("CREATE TABLE IF NOT EXISTS " + database.getDatabaseName() + "." + table + ";");
+            }
+        }).start();
         return this;
     }
 
     public DBManager dropTable(String... tables) {
-        for (String table : tables) {
-            this.database.execute("DROP TABLE IF EXISTS " + database.getDatabaseName() + "." + table + ";");
-        }
+        new Thread(() -> {
+            for (String table : tables) {
+                this.database.execute("DROP TABLE IF EXISTS " + database.getDatabaseName() + "." + table + ";");
+            }
+        }).start();
         return this;
     }
 
-    public boolean tableExists (String table) {
+    public boolean tableExists(String table) {
         ResultSet result = this.database.executeQuery("SELECT count(*) FROM information_schema.TABLES WHERE TABLE_NAME = '" + table + "' AND TABLE_SCHEMA in (SELECT DATABASE());");
         try {
             return result.next() && result.getInt(1) > 0;
