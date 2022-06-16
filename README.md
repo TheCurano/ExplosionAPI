@@ -2,7 +2,8 @@
 
 ## Introduction
 
-This API is only an addition. It's **not** a plugin.
+This API can be used without dropping it to the server. You only need to shadow it into your Jar.
+It can also be dropped to the server and used there without shadowing it.
 
 ## Register
 
