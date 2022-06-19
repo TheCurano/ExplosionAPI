@@ -1,6 +1,8 @@
 package de.curano.explosionapi.scoreboard;
 
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
@@ -17,6 +19,31 @@ public class SidebarScoreboard {
     public SidebarScoreboard(Scoreboard scoreboard, String displayName) {
         this.scoreboard = scoreboard;
         this.displayName = displayName;
+    }
+
+    public SidebarScoreboard(Player player, String displayName) {
+        if (player.getScoreboard() != Bukkit.getScoreboardManager().getMainScoreboard()) {
+            this.scoreboard = player.getScoreboard();
+        } else {
+            this.scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+            player.setScoreboard(this.scoreboard);
+        }
+        this.displayName = displayName;
+    }
+
+    public SidebarScoreboard(Scoreboard scoreboard) {
+        this.scoreboard = scoreboard;
+        this.displayName = " ";
+    }
+
+    public SidebarScoreboard(Player player) {
+        if (player.getScoreboard() != Bukkit.getScoreboardManager().getMainScoreboard()) {
+            this.scoreboard = player.getScoreboard();
+        } else {
+            this.scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+            player.setScoreboard(this.scoreboard);
+        }
+        this.displayName = " ";
     }
 
     public Objective getObjective() {
@@ -54,7 +81,7 @@ public class SidebarScoreboard {
         getObjective().unregister();
     }
 
-    public void set(String[] entries) {
+    public void set(String... entries) {
         boolean changed = true;
         while (changed) {
             changed = false;
