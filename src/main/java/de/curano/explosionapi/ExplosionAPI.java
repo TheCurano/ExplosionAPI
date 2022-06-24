@@ -10,12 +10,14 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public class ExplosionAPI {
 
     public static final String VERSION = "1.0";
     public static final Logger LOGGER = Bukkit.getLogger();
+    public static final UUID SERVER_UUID = UUID.randomUUID();
     private static boolean enabled = false;
 
     public static void register(JavaPlugin plugin) {
@@ -34,7 +36,7 @@ public class ExplosionAPI {
     public static boolean isExplosionItem(ItemStack item) {
         if(item == null || item.getType() == Material.AIR || item.getItemMeta() == null) return false;
         PersistentDataContainer persistentDataContainer = item.getItemMeta().getPersistentDataContainer();
-        return persistentDataContainer.has(new NamespacedKey("explosionapi", "explosion-item"), PersistentDataType.STRING);
+        return persistentDataContainer.has(new NamespacedKey("explosionapi", "item"), PersistentDataType.STRING);
     }
 
 }

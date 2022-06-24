@@ -15,9 +15,14 @@ public class ItemEvents implements Listener {
         if (event.getCurrentItem() != null
                 && event.getCurrentItem().getType() != Material.AIR
                 && ExplosionAPI.isExplosionItem(event.getCurrentItem())) {
-            SerializableConsumer<InventoryClickEvent> consumer = new EItemStack(event.getCurrentItem()).getInventoryClickEvent();
-            if (consumer != null) {
-                consumer.accept(event);
+            EItemStack itemStack = new EItemStack(event.getCurrentItem());
+            SerializableConsumer<InventoryClickEvent> permConsumer = itemStack.getInventoryClickEvent(Timing.PERMANENTLY);
+            if (permConsumer != null) {
+                permConsumer.accept(event);
+            }
+            SerializableConsumer<InventoryClickEvent> tempConsumer = itemStack.getInventoryClickEvent(Timing.TEMPORARY);
+            if (tempConsumer != null) {
+                tempConsumer.accept(event);
             }
         }
     }
@@ -27,9 +32,14 @@ public class ItemEvents implements Listener {
         if (event.getItem() != null
                 && event.getItem().getType() != Material.AIR
                 && ExplosionAPI.isExplosionItem(event.getItem())) {
-            SerializableConsumer<PlayerInteractEvent> consumer = new EItemStack(event.getItem()).getPlayerInteractEvent();
-            if (consumer != null) {
-                consumer.accept(event);
+            EItemStack itemStack = new EItemStack(event.getItem());
+            SerializableConsumer<PlayerInteractEvent> permConsumer = itemStack.getPlayerInteractEvent(Timing.PERMANENTLY);
+            if (permConsumer != null) {
+                permConsumer.accept(event);
+            }
+            SerializableConsumer<PlayerInteractEvent> tempConsumer = itemStack.getPlayerInteractEvent(Timing.TEMPORARY);
+            if (tempConsumer != null) {
+                tempConsumer.accept(event);
             }
         }
     }
