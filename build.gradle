@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'com.github.TheCurano'
-version 'v1.0'
+version '1.0'
 
 repositories {
     mavenCentral()
