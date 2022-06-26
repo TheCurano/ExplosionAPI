@@ -28,7 +28,7 @@ public final class MyPlugin extends JavaPlugin {
 ## Commands
 
 ```Java
-// Es muss nur der Name definiert werden
+// Only the name has to be defined
 @ECommand(name = "test", aliases = {"t", "testing"}, description = "Test command", permission = "test.command", permissionMessage = "Permission Message", usage = "/test")
 public class TestCommand extends Command {
 
@@ -37,7 +37,7 @@ public class TestCommand extends Command {
         return super.tabComplete(sender, alias, args);
     }
 
-    // Verpflichtend
+    // Forced
     public TestCommand(@NotNull String name) {
         super(name);
     }
