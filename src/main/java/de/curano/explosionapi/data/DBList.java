@@ -182,6 +182,10 @@ public class DBList {
         }
     }
 
+    public void remove(String name) {
+        dbManager.getDatabase().execute("DELETE FROM " + dbManager.getDatabase().getDatabaseName() + "." + listName + " WHERE name = '" + name + "';");
+    }
+
     public void set(String name, float value) {
         if (getString(name) == null) {
             dbManager.getDatabase().execute("INSERT INTO " + dbManager.getDatabase().getDatabaseName() + "." + listName + " (name, type, value) VALUES ('" + name + "', 6, '" + value + "');");
