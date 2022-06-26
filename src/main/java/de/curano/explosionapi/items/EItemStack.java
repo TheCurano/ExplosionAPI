@@ -36,32 +36,42 @@ public class EItemStack extends ItemStack implements Serializable {
     public EItemStack(Material material) {
         super(material);
         markItem();
-        setUUID(UUID.randomUUID());
+        if (getUUID() == null) {
+            setUUID(UUID.randomUUID());
+        }
     }
 
     public EItemStack(Material material, int amount) {
         super(material, amount);
         markItem();
-        setUUID(UUID.randomUUID());
+        if (getUUID() == null) {
+            setUUID(UUID.randomUUID());
+        }
     }
 
     public EItemStack(Material material, int amount, String displayName) {
         super(material, amount);
         setDisplayName(displayName);
         markItem();
-        setUUID(UUID.randomUUID());
+        if (getUUID() == null) {
+            setUUID(UUID.randomUUID());
+        }
     }
 
     public EItemStack(Material material, String displayName) {
         super(material);
         setDisplayName(displayName);
         markItem();
-        setUUID(UUID.randomUUID());
+        if (getUUID() == null) {
+            setUUID(UUID.randomUUID());
+        }
     }
 
     public EItemStack(ItemStack itemStack) {
         super(itemStack);
-        setUUID(UUID.randomUUID());
+        if (getUUID() == null) {
+            setUUID(UUID.randomUUID());
+        }
     }
 
     @Override
@@ -243,18 +253,18 @@ public class EItemStack extends ItemStack implements Serializable {
         return null;
     }
 
-    protected UUID setUUID(UUID uuid) {
+    public UUID setUUID(UUID uuid) {
         if (uuid == null) uuid = UUID.randomUUID();
         if (this.getItemMeta() == null) return uuid;
-        PersistentDataContainer persistentDataContainer = this.getItemMeta().getPersistentDataContainer();
-        persistentDataContainer.set(new NamespacedKey("explosionapi", "uuid"), PersistentDataType.STRING, uuid.toString());
+        ItemMeta meta = this.getItemMeta();
+        meta.getPersistentDataContainer().set(new NamespacedKey("explosionapi", "uuid"), PersistentDataType.STRING, uuid.toString());
+        this.setItemMeta(meta);
         return uuid;
     }
 
     public UUID getUUID() {
-        if (this.getItemMeta() == null) return setUUID(UUID.randomUUID());
-        if (!this.getItemMeta().getPersistentDataContainer().has(new NamespacedKey("explosionapi", "uuid"), PersistentDataType.STRING))
-            return setUUID(UUID.randomUUID());
+        if (this.getItemMeta() == null) return null;
+        if (!this.getItemMeta().getPersistentDataContainer().has(new NamespacedKey("explosionapi", "uuid"), PersistentDataType.STRING)) return null;
         PersistentDataContainer persistentDataContainer = this.getItemMeta().getPersistentDataContainer();
         return UUID.fromString(Objects.requireNonNull(persistentDataContainer.get(new NamespacedKey("explosionapi", "uuid"), PersistentDataType.STRING)));
     }

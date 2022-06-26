@@ -2,6 +2,7 @@ package de.curano.explosionapi;
 
 import de.curano.explosionapi.items.PDCObject;
 import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -35,7 +36,7 @@ public class Base64Converter {
         return null;
     }
 
-    public static String fullItemStackToString(ItemStack obj) {
+    public static String itemStackToString(ItemStack obj) {
         ArrayList<PDCObject> pdc = new ArrayList<>();
         Map<String, Object> itemStackData = obj.serialize();
         if (obj.getItemMeta() == null) {
@@ -67,6 +68,40 @@ public class Base64Converter {
         return null;
     }
 
+    public static String itemStacksToString(ItemStack[] inventory) {
+        String[] itemStacks = new String[inventory.length];
+        for (int i = 0; i < inventory.length; i++) {
+            itemStacks[i] = itemStackToString(inventory[i]);
+        }
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
+            dataOutput.writeInt(inventory.length);
+            for (int i = 0; i < inventory.length; i++) {
+                dataOutput.writeUTF(itemStacks[i]);
+            }
+            dataOutput.close();
+            return Base64Coder.encodeLines(outputStream.toByteArray());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static ItemStack[] fromStringToItemStacks(String string) {
+        try {
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(string));
+            BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
+            ItemStack[] itemStacks = new ItemStack[dataInput.readInt()];
+            for (int i = 0; i < itemStacks.length; i++) {
+                itemStacks[i] = fromStringToItemStack(dataInput.readUTF());
+            }
+            dataInput.close();
+            return itemStacks;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public static Object fromString(String data) {
         if (data != null) {
             try {
@@ -91,7 +126,8 @@ public class Base64Converter {
                 Object pdcObj = null;
                 try {
                     pdcObj = dataInput.readObject();
-                } catch (Exception ignore) { }
+                } catch (Exception ignore) {
+                }
                 dataInput.close();
                 if (obj instanceof Map) {
                     ItemStack itemStack = ItemStack.deserialize((Map<String, Object>) obj);

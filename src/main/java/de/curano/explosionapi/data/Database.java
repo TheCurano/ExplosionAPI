@@ -2,6 +2,7 @@ package de.curano.explosionapi.data;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import de.curano.explosionapi.ExplosionAPI;
 
 import java.sql.*;
 import java.util.Properties;
@@ -41,11 +42,13 @@ public class Database {
             this.database = database;
             this.username = username;
             this.password = password;
+            ExplosionAPI.LOGGER.info("Creating connection to MariaDB database...");
             try {
                 this.connection = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database + "?autoreconnect=true", this.username, this.password);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
+            ExplosionAPI.LOGGER.info("Connected to MariaDB database!");
         }
     }
 
