@@ -2,8 +2,9 @@
 
 ## Introduction
 
-This API can be used without dropping it to the server. You only need to shadow it into your Jar.
+This API can be used without dropping it to the server. You only need to shadow/shade it into your Jar.
 Dropping the API into to plugin folder will **NOT** work.
+Gradle: https://plugins.gradle.org/plugin/com.github.johnrengelman.shadow
 
 ## Register
 
