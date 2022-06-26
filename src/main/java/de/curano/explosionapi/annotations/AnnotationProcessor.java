@@ -15,12 +15,10 @@ import java.util.Arrays;
 public class AnnotationProcessor {
 
     public static void processRegister(Plugin plugin) {
-        System.out.println("Triggert: " + plugin.getClass().getName());
         String packageName = plugin.getClass().getPackage().getName();
         try (ScanResult scanResult = new ClassGraph().enableAllInfo().acceptPackages(packageName).scan()) {
             ClassInfoList classInfos = scanResult.getAllClasses();
             for (ClassInfo classInfo : classInfos) {
-                System.out.println("Class: " + classInfo.getName());
                 try {
                     if (classInfo.hasAnnotation(ECommand.class)) {
                         Class<?> clazz = classInfo.loadClass();
