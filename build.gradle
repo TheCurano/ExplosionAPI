@@ -25,6 +25,7 @@ dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
     compileOnly 'org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT'
     compileOnly 'org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT'
+    compileOnly 'org.spigotmc:spigot-api:1.19-R0.1-SNAPSHOT'
 
     // Database
     implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.7.3'
