@@ -6,6 +6,40 @@ This API can be used without dropping it to the server. You only need to shadow/
 Dropping the API into to plugin folder will **NOT** work.
 Gradle: https://plugins.gradle.org/plugin/com.github.johnrengelman.shadow
 
+## Gradle Implementation
+
+```
+    plugins {
+        id 'java'
+        id "com.github.johnrengelman.shadow" version "7.1.2"
+    }
+
+	repositories {
+	    maven { url 'https://jitpack.io' }
+	}
+		
+	dependencies {
+	    implementation 'com.github.TheCurano:ExplosionAPI:Tag'
+	}
+```
+
+## Maven Implementation
+
+    ```
+	<repositories>
+		<repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
+	</repositories>
+
+	<dependency>
+	    <groupId>com.github.TheCurano</groupId>
+	    <artifactId>ExplosionAPI</artifactId>
+	    <version>v1.0</version>
+	</dependency>
+    ```
+
 ## Register
 
 ```Java
