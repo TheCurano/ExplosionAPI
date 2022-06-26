@@ -7,9 +7,12 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.function.Consumer;
+
 public class InventoryBuilder {
 
     private Inventory inventory;
+    private boolean builded = false;
 
     public InventoryBuilder(InventoryHolder holder, int slots, String title) {
         this.inventory = Bukkit.createInventory(holder, slots, title);
@@ -51,11 +54,24 @@ public class InventoryBuilder {
     }
 
     public InventoryBuilder setTitle(String title) {
+        if (builded) {
+            throw new IllegalStateException("Inventory already builded.");
+        }
         Inventory oldInv = this.inventory;
         this.inventory = Bukkit.createInventory(oldInv.getHolder(), oldInv.getType(), title);
         this.inventory.setContents(oldInv.getContents());
         this.inventory.setStorageContents(oldInv.getStorageContents());
         this.inventory.setMaxStackSize(oldInv.getMaxStackSize());
+        if (InventoryEvents.inventoryCloseEvent.get(oldInv) != null) {
+            InventoryEvents.setInventoryClose(this.inventory, InventoryEvents.inventoryCloseEvent.get(oldInv));
+        }
+        if (InventoryEvents.inventoryClickEvents.get(oldInv) != null) {
+            InventoryEvents.setInventoryClick(this.inventory, InventoryEvents.inventoryClickEvents.get(oldInv));
+        }
+        if (InventoryEvents.inventoryInteractEvents.get(oldInv) != null) {
+            InventoryEvents.setInventoryInteract(this.inventory, InventoryEvents.inventoryInteractEvents.get(oldInv));
+        }
+        oldInv.clear();
         return this;
     }
 
@@ -91,7 +107,50 @@ public class InventoryBuilder {
         return this;
     }
 
+    public InventoryBuilder setInventoryCloseEvent(Consumer<InventoryCloseEvent> consumer) {
+        InventoryEvents.setInventoryClose(this.inventory, consumer);
+        return this;
+    }
+
+    public InventoryBuilder setInventoryClickEvent(Consumer<InventoryClickEvent> consumer) {
+        InventoryEvents.setInventoryClick(this.inventory, consumer);
+        return this;
+    }
+
+    public InventoryBuilder setInventoryInteractEvent(Consumer<InventoryInteractEvent> consumer) {
+        InventoryEvents.setInventoryInteract(this.inventory, consumer);
+        return this;
+    }
+
+    public InventoryBuilder removeInventoryCloseEvent() {
+        InventoryEvents.setInventoryClose(this.inventory, null);
+        return this;
+    }
+
+    public InventoryBuilder removeInventoryClickEvent() {
+        InventoryEvents.setInventoryClick(this.inventory, null);
+        return this;
+    }
+
+    public InventoryBuilder removeInventoryInteractEvent() {
+        InventoryEvents.setInventoryInteract(this.inventory, null);
+        return this;
+    }
+
+    public Consumer<InventoryCloseEvent> getInventoryCloseEvent() {
+        return InventoryEvents.inventoryCloseEvent.get(this.inventory);
+    }
+
+    public Consumer<InventoryClickEvent> getInventoryClickEvent() {
+        return InventoryEvents.inventoryClickEvents.get(this.inventory);
+    }
+
+    public Consumer<InventoryInteractEvent> getInventoryInteractEvent() {
+        return InventoryEvents.inventoryInteractEvents.get(this.inventory);
+    }
+
     public Inventory build() {
+        builded = true;
         return this.inventory;
     }
 

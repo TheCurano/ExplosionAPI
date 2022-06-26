@@ -1,6 +1,7 @@
 package de.curano.explosionapi;
 
 import de.curano.explosionapi.annotations.AnnotationProcessor;
+import de.curano.explosionapi.inventorys.InventoryEvents;
 import de.curano.explosionapi.items.ItemEvents;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -24,6 +25,7 @@ public class ExplosionAPI {
         if (!enabled) {
             enabled = true;
             Bukkit.getPluginManager().registerEvents(new ItemEvents(), plugin);
+            Bukkit.getPluginManager().registerEvents(new InventoryEvents(), plugin);
         }
         AnnotationProcessor.processRegister(plugin);
     }

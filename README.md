@@ -3,7 +3,7 @@
 ## Introduction
 
 This API can be used without dropping it to the server. You only need to shadow it into your Jar.
-It can also be dropped to the server and used there without shadowing it.
+Dropping the API into to plugin folder will **NOT** work.
 
 ## Register
 
@@ -73,18 +73,36 @@ public class Test {
                 .setLore(List.of("Zeile 1", "Zeile 2"))
                 .setInventoryClickEvent(event -> {
                     event.setCancelled(true);
-                });
+                }, Timing.TEMPORARY);
         item.setPlayerInteractEvent(event -> {
             event.setCancelled(true);
-        });
+        }, TIMIING.PERMANENTLY);
         player.getInventory().addItem(item);
     }
 }
 ```
 
+## InventoryBuilder
+### Be careful, Event Functions will be deleted after reloads / restarts.
+```Java
+public class Test {
+    public void function(Player player) {
+        InventoryBuilder builder = new InventoryBuilder(9, "Test");
+        builder.setTitle("Titel");
+        builder.setInventoryClickEvent(event -> {
+            event.setCancelled(true);
+        });
+        player.openInventory(builder.build());
+    }
+}
+```
+
 ## Base64Converter
+
 ### (Object to String / String to Object)
+
 ### Know that only Objects which implements Serializable are supported!
+
 ### Items have there own function, because they need a specific handling.
 
 ```Java
@@ -94,6 +112,34 @@ public class Test {
         String base64Item = Base64Converter.fullItemStackToString(itemStack);
         Object oldObject = Base64Converter.fromString(base64Object);
         ItemStack oldItem = Base64Converter.fromStringToItemStack(base64Item);
+    }
+}
+```
+
+## Database
+
+```Java
+public class Test {
+    public void function() {
+        Database database = new Database(DatabaseType.MARIADB_CONNECTION, "IP", 3306, "database_name", "username", "P@ssw0rd");
+        DBManager dbManager = database.getDBManager();
+        dbManager.createTable("test(id int, name varchar(255))");
+        DBList list = dbManager.createList("test1");
+        list.set("Test", "test");
+        String test = list.getString("Test");
+    }
+}
+```
+
+## SidebarScoreboard
+
+```Java
+public class Test {
+    public void function(Player player) {
+        SidebarScoreboard sidebarScoreboard = new SidebarScoreboard(player);
+        sidebarScoreboard.setTitle("Title");
+        sidebarScoreboard.set("Line 1", "Line 2", "Line 3");
+        sidebarScoreboard.set("Line 1", "Line 3", "Line 2");
     }
 }
 ```
