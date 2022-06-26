@@ -68,9 +68,6 @@ public class InventoryBuilder {
         if (InventoryEvents.inventoryClickEvents.get(oldInv) != null) {
             InventoryEvents.setInventoryClick(this.inventory, InventoryEvents.inventoryClickEvents.get(oldInv));
         }
-        if (InventoryEvents.inventoryInteractEvents.get(oldInv) != null) {
-            InventoryEvents.setInventoryInteract(this.inventory, InventoryEvents.inventoryInteractEvents.get(oldInv));
-        }
         oldInv.clear();
         return this;
     }
