@@ -8,6 +8,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import java.util.function.Consumer;
+
 public class ItemEvents implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -16,11 +18,11 @@ public class ItemEvents implements Listener {
                 && event.getCurrentItem().getType() != Material.AIR
                 && ExplosionAPI.isExplosionItem(event.getCurrentItem())) {
             EItemStack itemStack = new EItemStack(event.getCurrentItem());
-            SerializableConsumer<InventoryClickEvent> permConsumer = itemStack.getInventoryClickEvent(Timing.PERMANENTLY);
+            Consumer<InventoryClickEvent> permConsumer = itemStack.getInventoryClickEvent(Timing.PERMANENTLY);
             if (permConsumer != null) {
                 permConsumer.accept(event);
             }
-            SerializableConsumer<InventoryClickEvent> tempConsumer = itemStack.getInventoryClickEvent(Timing.TEMPORARY);
+            Consumer<InventoryClickEvent> tempConsumer = itemStack.getInventoryClickEvent(Timing.TEMPORARY);
             if (tempConsumer != null) {
                 tempConsumer.accept(event);
             }
@@ -33,11 +35,11 @@ public class ItemEvents implements Listener {
                 && event.getItem().getType() != Material.AIR
                 && ExplosionAPI.isExplosionItem(event.getItem())) {
             EItemStack itemStack = new EItemStack(event.getItem());
-            SerializableConsumer<PlayerInteractEvent> permConsumer = itemStack.getPlayerInteractEvent(Timing.PERMANENTLY);
+            Consumer<PlayerInteractEvent> permConsumer = itemStack.getPlayerInteractEvent(Timing.PERMANENTLY);
             if (permConsumer != null) {
                 permConsumer.accept(event);
             }
-            SerializableConsumer<PlayerInteractEvent> tempConsumer = itemStack.getPlayerInteractEvent(Timing.TEMPORARY);
+            Consumer<PlayerInteractEvent> tempConsumer = itemStack.getPlayerInteractEvent(Timing.TEMPORARY);
             if (tempConsumer != null) {
                 tempConsumer.accept(event);
             }

@@ -1,8 +1,0 @@
-name: ExplosionAPI
-version: 1.0
-description: ExplosionAPI
-author: TheCurano
-
-main: de.curano.explosionapi.ExplosionAPIPlugin
-
-commands:

@@ -36,27 +36,32 @@ public class EItemStack extends ItemStack implements Serializable {
     public EItemStack(Material material) {
         super(material);
         markItem();
+        setUUID(UUID.randomUUID());
     }
 
     public EItemStack(Material material, int amount) {
         super(material, amount);
         markItem();
+        setUUID(UUID.randomUUID());
     }
 
     public EItemStack(Material material, int amount, String displayName) {
         super(material, amount);
         setDisplayName(displayName);
         markItem();
+        setUUID(UUID.randomUUID());
     }
 
     public EItemStack(Material material, String displayName) {
         super(material);
         setDisplayName(displayName);
         markItem();
+        setUUID(UUID.randomUUID());
     }
 
     public EItemStack(ItemStack itemStack) {
         super(itemStack);
+        setUUID(UUID.randomUUID());
     }
 
     @Override
@@ -95,12 +100,7 @@ public class EItemStack extends ItemStack implements Serializable {
         return this.getItemMeta().getLore();
     }
 
-
-
-
-
-
-    public EItemStack setInventoryClickEvent(Consumer<InventoryClickEvent> clickEvent, Timing timing) {
+    public EItemStack setInventoryClickEvent(SerializableConsumer<InventoryClickEvent> clickEvent, Timing timing) {
         ItemMeta meta = this.getItemMeta();
         if (meta == null) return this;
         PersistentDataContainer persistentDataContainer = meta.getPersistentDataContainer();
@@ -108,7 +108,7 @@ public class EItemStack extends ItemStack implements Serializable {
             if (timing == Timing.PERMANENTLY) {
                 persistentDataContainer.remove(new NamespacedKey("explosionapi", "inventoryclick"));
             } else if (timing == Timing.TEMPORARY) {
-                persistentDataContainer.remove(new NamespacedKey("explosionapi", "inventoryclick-temp"));
+                clickEvents.remove(getUUID());
                 persistentDataContainer.remove(new NamespacedKey("explosionapi", "inventoryclick-serveruuid"));
             }
             return this;
@@ -128,13 +128,17 @@ public class EItemStack extends ItemStack implements Serializable {
         if (timing == Timing.PERMANENTLY && consumer != null) {
             persistentDataContainer.set(new NamespacedKey("explosionapi", "inventoryclick"), PersistentDataType.STRING, consumer);
         } else if (timing == Timing.TEMPORARY && consumer != null) {
-            persistentDataContainer.set(new NamespacedKey("explosionapi", "inventoryclick-temp"), PersistentDataType.STRING, consumer);
+            if (clickEvents.containsKey(getUUID())) {
+                clickEvents.replace(getUUID(), clickEvent);
+            } else {
+                clickEvents.put(getUUID(), clickEvent);
+            }
             persistentDataContainer.set(new NamespacedKey("explosionapi", "inventoryclick-serveruuid"), PersistentDataType.STRING, ExplosionAPI.SERVER_UUID.toString());
         }
         return this;
     }
 
-    public EItemStack setPlayerInteractEvent(Consumer<PlayerInteractEvent> interactEvent, Timing timing) {
+    public EItemStack setPlayerInteractEvent(SerializableConsumer<PlayerInteractEvent> interactEvent, Timing timing) {
         ItemMeta meta = this.getItemMeta();
         if (meta == null) return this;
         PersistentDataContainer persistentDataContainer = meta.getPersistentDataContainer();
@@ -142,7 +146,7 @@ public class EItemStack extends ItemStack implements Serializable {
             if (timing == Timing.PERMANENTLY) {
                 persistentDataContainer.remove(new NamespacedKey("explosionapi", "playerinteract"));
             } else if (timing == Timing.TEMPORARY) {
-                persistentDataContainer.remove(new NamespacedKey("explosionapi", "playerinteract-temp"));
+                interactEvents.remove(getUUID());
                 persistentDataContainer.remove(new NamespacedKey("explosionapi", "playerinteract-serveruuid"));
             }
             return this;
@@ -164,13 +168,17 @@ public class EItemStack extends ItemStack implements Serializable {
         if (timing == Timing.PERMANENTLY) {
             persistentDataContainer.set(new NamespacedKey("explosionapi", "playerinteract"), PersistentDataType.STRING, consumer);
         } else if (timing == Timing.TEMPORARY) {
-            persistentDataContainer.set(new NamespacedKey("explosionapi", "playerinteract-temp"), PersistentDataType.STRING, consumer);
+            if (interactEvents.containsKey(getUUID())) {
+                interactEvents.replace(getUUID(), interactEvent);
+            } else {
+                interactEvents.put(getUUID(), interactEvent);
+            }
             persistentDataContainer.set(new NamespacedKey("explosionapi", "playerinteract-serveruuid"), PersistentDataType.STRING, ExplosionAPI.SERVER_UUID.toString());
         }
         return this;
     }
 
-    public SerializableConsumer<InventoryClickEvent> getInventoryClickEvent(Timing timing) {
+    public Consumer<InventoryClickEvent> getInventoryClickEvent(Timing timing) {
         ItemMeta meta = this.getItemMeta();
         if (meta == null) return null;
         PersistentDataContainer persistentDataContainer = meta.getPersistentDataContainer();
@@ -190,31 +198,20 @@ public class EItemStack extends ItemStack implements Serializable {
                 }
             }
         } else if (timing == Timing.TEMPORARY) {
-            if (persistentDataContainer.has(new NamespacedKey("explosionapi", "inventoryclick-serveruuid"), PersistentDataType.STRING)
-                    && !persistentDataContainer.get(new NamespacedKey("explosionapi", "inventoryclick-serveruuid"), PersistentDataType.STRING).equals(ExplosionAPI.SERVER_UUID.toString())) {
-                persistentDataContainer.remove(new NamespacedKey("explosionapi", "inventoryclick-temp"));
+            if (persistentDataContainer.has(new NamespacedKey("explosionapi", "inventoryclick-serveruuid"), PersistentDataType.STRING) && !persistentDataContainer.get(new NamespacedKey("explosionapi", "inventoryclick-serveruuid"), PersistentDataType.STRING).equals(ExplosionAPI.SERVER_UUID.toString())) {
+                clickEvents.remove(getUUID());
                 persistentDataContainer.remove(new NamespacedKey("explosionapi", "inventoryclick-serveruuid"));
                 return null;
             }
-            if (persistentDataContainer.has(new NamespacedKey("explosionapi", "inventoryclick-temp"), PersistentDataType.STRING)) {
-                String data = persistentDataContainer.get(new NamespacedKey("explosionapi", "inventoryclick-temp"), PersistentDataType.STRING);
-                if (data == null) return null;
-                try {
-                    ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));
-                    BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
-                    SerializableConsumer<InventoryClickEvent> inventoryClickEvent = (SerializableConsumer<InventoryClickEvent>) dataInput.readObject();
-                    dataInput.close();
-                    return inventoryClickEvent;
-                } catch (Exception e) {
-                    ExplosionAPI.LOGGER.log(Level.WARNING, "ExplosionAPI Error Data: " + data);
-                    e.printStackTrace();
-                }
+            if (clickEvents.containsKey(getUUID())) {
+                return clickEvents.get(getUUID());
             }
         }
+
         return null;
     }
 
-    public SerializableConsumer<PlayerInteractEvent> getPlayerInteractEvent(Timing timing) {
+    public Consumer<PlayerInteractEvent> getPlayerInteractEvent(Timing timing) {
         ItemMeta meta = this.getItemMeta();
         if (meta == null) return null;
         PersistentDataContainer persistentDataContainer = meta.getPersistentDataContainer();
@@ -234,25 +231,13 @@ public class EItemStack extends ItemStack implements Serializable {
                 }
             }
         } else if (timing == Timing.TEMPORARY) {
-            if (persistentDataContainer.has(new NamespacedKey("explosionapi", "playerinteract-serveruuid"), PersistentDataType.STRING)
-                    && !persistentDataContainer.get(new NamespacedKey("explosionapi", "playerinteract-serveruuid"), PersistentDataType.STRING).equals(ExplosionAPI.SERVER_UUID.toString())) {
-                persistentDataContainer.remove(new NamespacedKey("explosionapi", "playerinteract-temp"));
+            if (persistentDataContainer.has(new NamespacedKey("explosionapi", "playerinteract-serveruuid"), PersistentDataType.STRING) && !persistentDataContainer.get(new NamespacedKey("explosionapi", "playerinteract-serveruuid"), PersistentDataType.STRING).equals(ExplosionAPI.SERVER_UUID.toString())) {
+                interactEvents.remove(getUUID());
                 persistentDataContainer.remove(new NamespacedKey("explosionapi", "playerinteract-serveruuid"));
                 return null;
             }
-            if (persistentDataContainer.has(new NamespacedKey("explosionapi", "playerinteract-temp"), PersistentDataType.STRING)) {
-                String data = persistentDataContainer.get(new NamespacedKey("explosionapi", "playerinteract-temp"), PersistentDataType.STRING);
-                if (data == null) return null;
-                try {
-                    ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));
-                    BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
-                    SerializableConsumer<PlayerInteractEvent> playerInteractEvent = (SerializableConsumer<PlayerInteractEvent>) dataInput.readObject();
-                    dataInput.close();
-                    return playerInteractEvent;
-                } catch (Exception e) {
-                    ExplosionAPI.LOGGER.log(Level.WARNING, "ExplosionAPI Error Data: " + data);
-                    e.printStackTrace();
-                }
+            if (interactEvents.containsKey(getUUID())) {
+                return interactEvents.get(getUUID());
             }
         }
         return null;
@@ -268,7 +253,8 @@ public class EItemStack extends ItemStack implements Serializable {
 
     public UUID getUUID() {
         if (this.getItemMeta() == null) return setUUID(UUID.randomUUID());
-        if (!this.getItemMeta().getPersistentDataContainer().has(new NamespacedKey("explosionapi", "uuid"), PersistentDataType.STRING)) return setUUID(UUID.randomUUID());
+        if (!this.getItemMeta().getPersistentDataContainer().has(new NamespacedKey("explosionapi", "uuid"), PersistentDataType.STRING))
+            return setUUID(UUID.randomUUID());
         PersistentDataContainer persistentDataContainer = this.getItemMeta().getPersistentDataContainer();
         return UUID.fromString(Objects.requireNonNull(persistentDataContainer.get(new NamespacedKey("explosionapi", "uuid"), PersistentDataType.STRING)));
     }

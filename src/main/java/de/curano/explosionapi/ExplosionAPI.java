@@ -8,6 +8,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.UUID;
@@ -20,16 +21,15 @@ public class ExplosionAPI {
     public static final UUID SERVER_UUID = UUID.randomUUID();
     private static boolean enabled = false;
 
-    public static void register(JavaPlugin plugin) {
+    public static void register(Plugin plugin) {
         if (!enabled) {
             enabled = true;
-
             Bukkit.getPluginManager().registerEvents(new ItemEvents(), plugin);
         }
         AnnotationProcessor.processRegister(plugin);
     }
 
-    public static void unregister(JavaPlugin plugin) {
+    public static void unregister(Plugin plugin) {
         AnnotationProcessor.processUnregister(plugin);
     }
 

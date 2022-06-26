@@ -5,7 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -14,11 +14,13 @@ import java.util.Arrays;
 
 public class AnnotationProcessor {
 
-    public static void processRegister(JavaPlugin plugin) {
+    public static void processRegister(Plugin plugin) {
+        System.out.println("Triggert: " + plugin.getClass().getName());
         String packageName = plugin.getClass().getPackage().getName();
         try (ScanResult scanResult = new ClassGraph().enableAllInfo().acceptPackages(packageName).scan()) {
             ClassInfoList classInfos = scanResult.getAllClasses();
             for (ClassInfo classInfo : classInfos) {
+                System.out.println("Class: " + classInfo.getName());
                 try {
                     if (classInfo.hasAnnotation(ECommand.class)) {
                         Class<?> clazz = classInfo.loadClass();
@@ -95,7 +97,7 @@ public class AnnotationProcessor {
         }
     }
 
-    public static void processUnregister(JavaPlugin plugin) {
+    public static void processUnregister(Plugin plugin) {
         String packageName = plugin.getClass().getPackage().getName();
         try (ScanResult scanResult = new ClassGraph().enableAllInfo().acceptPackages(packageName).scan()) {
             ClassInfoList classInfos = scanResult.getAllClasses();
