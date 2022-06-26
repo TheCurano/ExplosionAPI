@@ -14,17 +14,8 @@ import java.util.function.Consumer;
 @Events
 public class InventoryEvents implements Listener {
 
-    protected static HashMap<Inventory, Consumer<InventoryInteractEvent>> inventoryInteractEvents = new HashMap<>();
     protected static HashMap<Inventory, Consumer<InventoryClickEvent>> inventoryClickEvents = new HashMap<>();
     protected static HashMap<Inventory, Consumer<InventoryCloseEvent>> inventoryCloseEvent = new HashMap<>();
-
-    @EventHandler
-    public void onInventoryInteract(InventoryInteractEvent event) {
-        Consumer<InventoryInteractEvent> consumer = inventoryInteractEvents.get(event.getInventory());
-        if (consumer != null) {
-            consumer.accept(event);
-        }
-    }
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
@@ -39,14 +30,6 @@ public class InventoryEvents implements Listener {
         Consumer<InventoryCloseEvent> consumer = inventoryCloseEvent.get(event.getInventory());
         if (consumer != null) {
             consumer.accept(event);
-        }
-    }
-
-    protected static void setInventoryInteract(Inventory inventory, Consumer<InventoryInteractEvent> consumer) {
-        if (inventoryInteractEvents.containsKey(inventory)) {
-            inventoryInteractEvents.replace(inventory, consumer);
-        } else {
-            inventoryInteractEvents.put(inventory, consumer);
         }
     }
 

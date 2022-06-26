@@ -117,11 +117,6 @@ public class InventoryBuilder {
         return this;
     }
 
-    public InventoryBuilder setInventoryInteractEvent(Consumer<InventoryInteractEvent> consumer) {
-        InventoryEvents.setInventoryInteract(this.inventory, consumer);
-        return this;
-    }
-
     public InventoryBuilder removeInventoryCloseEvent() {
         InventoryEvents.setInventoryClose(this.inventory, null);
         return this;
@@ -132,21 +127,12 @@ public class InventoryBuilder {
         return this;
     }
 
-    public InventoryBuilder removeInventoryInteractEvent() {
-        InventoryEvents.setInventoryInteract(this.inventory, null);
-        return this;
-    }
-
     public Consumer<InventoryCloseEvent> getInventoryCloseEvent() {
         return InventoryEvents.inventoryCloseEvent.get(this.inventory);
     }
 
     public Consumer<InventoryClickEvent> getInventoryClickEvent() {
         return InventoryEvents.inventoryClickEvents.get(this.inventory);
-    }
-
-    public Consumer<InventoryInteractEvent> getInventoryInteractEvent() {
-        return InventoryEvents.inventoryInteractEvents.get(this.inventory);
     }
 
     public Inventory build() {
