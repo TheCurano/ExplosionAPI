@@ -19,7 +19,7 @@ Gradle: https://plugins.gradle.org/plugin/com.github.johnrengelman.shadow
 	}
 		
 	dependencies {
-	    implementation 'com.github.TheCurano:ExplosionAPI:Tag'
+	    implementation 'com.github.TheCurano:ExplosionAPI:1.0'
 	}
 ```
 
@@ -36,7 +36,7 @@ Gradle: https://plugins.gradle.org/plugin/com.github.johnrengelman.shadow
 	<dependency>
 	    <groupId>com.github.TheCurano</groupId>
 	    <artifactId>ExplosionAPI</artifactId>
-	    <version>v1.0</version>
+	    <version>1.0</version>
 	</dependency>
     ```
 
