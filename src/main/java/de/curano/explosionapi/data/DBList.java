@@ -8,11 +8,40 @@ public class DBList {
 
     private DBManager dbManager;
     private String listName;
+    private int ttlCache = 30000;
+    private boolean cacheEnabled = false;
+    private Cache cache = null;
 
     public DBList(DBManager dbManager, String listName) {
         this.dbManager = dbManager;
         this.listName = listName;
         createIfNotExists();
+    }
+
+    public DBList enableCache() {
+        this.cache = new Cache(ttlCache);
+        cacheEnabled = true;
+        return this;
+    }
+
+    // In milliseconds
+    public DBList setTTL(int ttl) {
+        this.ttlCache = ttl;
+        this.cache.setTTL(ttl);
+        return this;
+    }
+
+    public int getTTL() {
+        return ttlCache;
+    }
+
+    public DBList disableCache() {
+        return this;
+    }
+
+    public DBList clearCache() {
+        this.cache.clear();
+        return this;
     }
 
     /**
@@ -23,6 +52,12 @@ public class DBList {
     }
 
     public String getString(String name) {
+        if (cacheEnabled) {
+            String cacheResult = (String) this.cache.get("1:" + name);
+            if (cacheResult != null) {
+                return cacheResult;
+            }
+        }
         ResultSet result = dbManager.getDatabase().executeQuery("SELECT value FROM " + dbManager.getDatabase().getDatabaseName() + "." + listName + " WHERE type = 1 AND name = '" + name + "';");
         try {
             if (result.next()) {
@@ -35,6 +70,12 @@ public class DBList {
     }
 
     public Integer getInt(String name) {
+        if (cacheEnabled) {
+            Integer cacheResult = (Integer) this.cache.get("2:" + name);
+            if (cacheResult != null) {
+                return cacheResult;
+            }
+        }
         ResultSet result = dbManager.getDatabase().executeQuery("SELECT value FROM " + dbManager.getDatabase().getDatabaseName() + "." + listName + " WHERE type = 2 AND name = '" + name + "';");
         try {
             if (result.next()) {
@@ -47,6 +88,12 @@ public class DBList {
     }
 
     public Long getLong(String name) {
+        if (cacheEnabled) {
+            Long cacheResult = (Long) this.cache.get("3:" + name);
+            if (cacheResult != null) {
+                return cacheResult;
+            }
+        }
         ResultSet result = dbManager.getDatabase().executeQuery("SELECT value FROM " + dbManager.getDatabase().getDatabaseName() + "." + listName + " WHERE type = 3 AND name = '" + name + "';");
         try {
             if (result.next()) {
@@ -59,6 +106,12 @@ public class DBList {
     }
 
     public Double getDouble(String name) {
+        if (cacheEnabled) {
+            Double cacheResult = (Double) this.cache.get("4:" + name);
+            if (cacheResult != null) {
+                return cacheResult;
+            }
+        }
         ResultSet result = dbManager.getDatabase().executeQuery("SELECT value FROM " + dbManager.getDatabase().getDatabaseName() + "." + listName + " WHERE type = 4 AND name = '" + name + "';");
         try {
             if (result.next()) {
@@ -71,6 +124,12 @@ public class DBList {
     }
 
     public Boolean getBoolean(String name) {
+        if (cacheEnabled) {
+            Boolean cacheResult = (Boolean) this.cache.get("5:" + name);
+            if (cacheResult != null) {
+                return cacheResult;
+            }
+        }
         ResultSet result = dbManager.getDatabase().executeQuery("SELECT value FROM " + dbManager.getDatabase().getDatabaseName() + "." + listName + " WHERE type = 5 AND name = '" + name + "';");
         try {
             if (result.next()) {
@@ -83,6 +142,12 @@ public class DBList {
     }
 
     public Float getFloat(String name) {
+        if (cacheEnabled) {
+            Float cacheResult = (Float) this.cache.get("6:" + name);
+            if (cacheResult != null) {
+                return cacheResult;
+            }
+        }
         ResultSet result = dbManager.getDatabase().executeQuery("SELECT value FROM " + dbManager.getDatabase().getDatabaseName() + "." + listName + " WHERE type = 6  AND name = '" + name + "';");
         try {
             if (result.next()) {
@@ -95,6 +160,12 @@ public class DBList {
     }
 
     public String getStringOrDefault(String name, String defaultValue) {
+        if (cacheEnabled) {
+            String cacheResult = (String) this.cache.get("1:" + name);
+            if (cacheResult != null) {
+                return cacheResult;
+            }
+        }
         String value = getString(name);
         if (value == null) {
             return defaultValue;
@@ -103,6 +174,12 @@ public class DBList {
     }
 
     public Integer getIntOrDefault(String name, Integer defaultValue) {
+        if (cacheEnabled) {
+            Integer cacheResult = (Integer) this.cache.get("2:" + name);
+            if (cacheResult != null) {
+                return cacheResult;
+            }
+        }
         Integer value = getInt(name);
         if (value == null) {
             return defaultValue;
@@ -111,6 +188,12 @@ public class DBList {
     }
 
     public Long getLongOrDefault(String name, Long defaultValue) {
+        if (cacheEnabled) {
+            Long cacheResult = (Long) this.cache.get("3:" + name);
+            if (cacheResult != null) {
+                return cacheResult;
+            }
+        }
         Long value = getLong(name);
         if (value == null) {
             return defaultValue;
@@ -119,6 +202,12 @@ public class DBList {
     }
 
     public Double getDoubleOrDefault(String name, Double defaultValue) {
+        if (cacheEnabled) {
+            Double cacheResult = (Double) this.cache.get("4:" + name);
+            if (cacheResult != null) {
+                return cacheResult;
+            }
+        }
         Double value = getDouble(name);
         if (value == null) {
             return defaultValue;
@@ -127,6 +216,12 @@ public class DBList {
     }
 
     public Boolean getBooleanOrDefault(String name, Boolean defaultValue) {
+        if (cacheEnabled) {
+            Boolean cacheResult = (Boolean) this.cache.get("5:" + name);
+            if (cacheResult != null) {
+                return cacheResult;
+            }
+        }
         Boolean value = getBoolean(name);
         if (value == null) {
             return defaultValue;
@@ -135,6 +230,12 @@ public class DBList {
     }
 
     public Float getFloatOrDefault(String name, Float defaultValue) {
+        if (cacheEnabled) {
+            Float cacheResult = (Float) this.cache.get("6:" + name);
+            if (cacheResult != null) {
+                return cacheResult;
+            }
+        }
         Float value = getFloat(name);
         if (value == null) {
             return defaultValue;
@@ -143,30 +244,51 @@ public class DBList {
     }
 
     public void removeString(String name) {
+        if (cacheEnabled) {
+            this.cache.remove("1:" + name);
+        }
         dbManager.getDatabase().execute("DELETE FROM " + dbManager.getDatabase().getDatabaseName() + "." + listName + " WHERE name = '" + name + "' AND type = 1;");
     }
 
     public void removeInt(String name) {
+        if (cacheEnabled) {
+            this.cache.remove("2:" + name);
+        }
         dbManager.getDatabase().execute("DELETE FROM " + dbManager.getDatabase().getDatabaseName() + "." + listName + " WHERE name = '" + name + "' AND type = 2;");
     }
 
     public void removeLong(String name) {
+        if (cacheEnabled) {
+            this.cache.remove("3:" + name);
+        }
         dbManager.getDatabase().execute("DELETE FROM " + dbManager.getDatabase().getDatabaseName() + "." + listName + " WHERE name = '" + name + "' AND type = 3;");
     }
 
     public void removeDouble(String name) {
+        if (cacheEnabled) {
+            this.cache.remove("4:" + name);
+        }
         dbManager.getDatabase().execute("DELETE FROM " + dbManager.getDatabase().getDatabaseName() + "." + listName + " WHERE name = '" + name + "' AND type = 4;");
     }
 
     public void removeBoolean(String name) {
+        if (cacheEnabled) {
+            this.cache.remove("5:" + name);
+        }
         dbManager.getDatabase().execute("DELETE FROM " + dbManager.getDatabase().getDatabaseName() + "." + listName + " WHERE name = '" + name + "' AND type = 5;");
     }
 
     public void removeFloat(String name) {
+        if (cacheEnabled) {
+            this.cache.remove("6:" + name);
+        }
         dbManager.getDatabase().execute("DELETE FROM " + dbManager.getDatabase().getDatabaseName() + "." + listName + " WHERE name = '" + name + "' AND type = 6;");
     }
 
     public void set(String name, String value) {
+        if (cacheEnabled) {
+            this.cache.set("1:" + name, value);
+        }
         if (getString(name) == null) {
             dbManager.getDatabase().execute("INSERT INTO " + dbManager.getDatabase().getDatabaseName() + "." + listName + " (name, type, value) VALUES ('" + name + "', 1, '" + value + "');");
         } else {
@@ -175,6 +297,9 @@ public class DBList {
     }
 
     public void set(String name, int value) {
+        if (cacheEnabled) {
+            this.cache.set("2:" + name, value);
+        }
         if (getString(name) == null) {
             dbManager.getDatabase().execute("INSERT INTO " + dbManager.getDatabase().getDatabaseName() + "." + listName + " (name, type, value) VALUES ('" + name + "', 2, '" + value + "');");
         } else {
@@ -183,6 +308,9 @@ public class DBList {
     }
 
     public void set(String name, long value) {
+        if (cacheEnabled) {
+            this.cache.set("3:" + name, value);
+        }
         if (getString(name) == null) {
             dbManager.getDatabase().execute("INSERT INTO '" + dbManager.getDatabase().getDatabaseName() + "." + listName + " (name, type, value) VALUES ('" + name + "', 3, '" + value + "');");
         } else {
@@ -191,6 +319,9 @@ public class DBList {
     }
 
     public void set(String name, double value) {
+        if (cacheEnabled) {
+            this.cache.set("4:" + name, value);
+        }
         if (getString(name) == null) {
             dbManager.getDatabase().execute("INSERT INTO " + dbManager.getDatabase().getDatabaseName() + "." + listName + " (name, type, value) VALUES ('" + name + "', 4, '" + value + "');");
         } else {
@@ -199,6 +330,9 @@ public class DBList {
     }
 
     public void set(String name, boolean value) {
+        if (cacheEnabled) {
+            this.cache.set("5:" + name, value);
+        }
         if (getString(name) == null) {
             dbManager.getDatabase().execute("INSERT INTO " + dbManager.getDatabase().getDatabaseName() + "." + listName + " (name, type, value) VALUES ('" + name + "', 5, '" + value + "');");
         } else {
@@ -207,6 +341,9 @@ public class DBList {
     }
 
     public void set(String name, float value) {
+        if (cacheEnabled) {
+            this.cache.set("6:" + name, value);
+        }
         if (getString(name) == null) {
             dbManager.getDatabase().execute("INSERT INTO " + dbManager.getDatabase().getDatabaseName() + "." + listName + " (name, type, value) VALUES ('" + name + "', 6, '" + value + "');");
         } else {
