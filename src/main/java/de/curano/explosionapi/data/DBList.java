@@ -142,6 +142,30 @@ public class DBList {
         return value;
     }
 
+    public void removeString(String name) {
+        dbManager.getDatabase().execute("DELETE FROM " + dbManager.getDatabase().getDatabaseName() + "." + listName + " WHERE name = '" + name + "' AND type = 1;");
+    }
+
+    public void removeInt(String name) {
+        dbManager.getDatabase().execute("DELETE FROM " + dbManager.getDatabase().getDatabaseName() + "." + listName + " WHERE name = '" + name + "' AND type = 2;");
+    }
+
+    public void removeLong(String name) {
+        dbManager.getDatabase().execute("DELETE FROM " + dbManager.getDatabase().getDatabaseName() + "." + listName + " WHERE name = '" + name + "' AND type = 3;");
+    }
+
+    public void removeDouble(String name) {
+        dbManager.getDatabase().execute("DELETE FROM " + dbManager.getDatabase().getDatabaseName() + "." + listName + " WHERE name = '" + name + "' AND type = 4;");
+    }
+
+    public void removeBoolean(String name) {
+        dbManager.getDatabase().execute("DELETE FROM " + dbManager.getDatabase().getDatabaseName() + "." + listName + " WHERE name = '" + name + "' AND type = 5;");
+    }
+
+    public void removeFloat(String name) {
+        dbManager.getDatabase().execute("DELETE FROM " + dbManager.getDatabase().getDatabaseName() + "." + listName + " WHERE name = '" + name + "' AND type = 6;");
+    }
+
     public void set(String name, String value) {
         if (getString(name) == null) {
             dbManager.getDatabase().execute("INSERT INTO " + dbManager.getDatabase().getDatabaseName() + "." + listName + " (name, type, value) VALUES ('" + name + "', 1, '" + value + "');");
@@ -180,10 +204,6 @@ public class DBList {
         } else {
             dbManager.getDatabase().execute("UPDATE " + dbManager.getDatabase().getDatabaseName() + "." + listName + " SET value = '" + value + "' WHERE name = '" + name + "';");
         }
-    }
-
-    public void remove(String name) {
-        dbManager.getDatabase().execute("DELETE FROM " + dbManager.getDatabase().getDatabaseName() + "." + listName + " WHERE name = '" + name + "';");
     }
 
     public void set(String name, float value) {

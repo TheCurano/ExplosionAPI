@@ -37,6 +37,9 @@ public class Base64Converter {
     }
 
     public static String itemStackToString(ItemStack obj) {
+        if (obj == null) {
+            return null;
+        }
         ArrayList<PDCObject> pdc = new ArrayList<>();
         Map<String, Object> itemStackData = obj.serialize();
         if (obj.getItemMeta() == null) {
@@ -78,13 +81,14 @@ public class Base64Converter {
             BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
             dataOutput.writeInt(inventory.length);
             for (int i = 0; i < inventory.length; i++) {
-                dataOutput.writeUTF(itemStacks[i]);
+                dataOutput.writeUTF(itemStacks[i] + "");
             }
             dataOutput.close();
             return Base64Coder.encodeLines(outputStream.toByteArray());
         } catch (Exception e) {
-            return null;
+            e.printStackTrace();
         }
+        return null;
     }
 
     public static ItemStack[] fromStringToItemStacks(String string) {
@@ -93,13 +97,19 @@ public class Base64Converter {
             BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
             ItemStack[] itemStacks = new ItemStack[dataInput.readInt()];
             for (int i = 0; i < itemStacks.length; i++) {
-                itemStacks[i] = fromStringToItemStack(dataInput.readUTF());
+                String input = dataInput.readUTF();
+                if (input.equals("null")) {
+                    itemStacks[i] = null;
+                } else {
+                    itemStacks[i] = fromStringToItemStack(input);
+                }
             }
             dataInput.close();
             return itemStacks;
         } catch (Exception e) {
-            return null;
+            e.printStackTrace();
         }
+        return null;
     }
 
     public static Object fromString(String data) {
@@ -144,6 +154,7 @@ public class Base64Converter {
                     return (ItemStack) obj;
                 }
             } catch (Exception e) {
+                System.out.println("Error while deserializing ItemStack(" + data + ")");
                 e.printStackTrace();
             }
         }
