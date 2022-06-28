@@ -51,8 +51,10 @@ public class DBList {
         dbManager.createTable(listName + "(name VARCHAR(256), type BIT, value VARCHAR(4096))");
     }
 
-    public String getString(String name) {
-        if (cacheEnabled) {
+    public String getString(String name) { return getString(name, false); }
+
+    public String getString(String name, boolean disableCache) {
+        if (cacheEnabled && !disableCache) {
             String cacheResult = (String) this.cache.get("1:" + name);
             if (cacheResult != null) {
                 return cacheResult;
@@ -69,8 +71,10 @@ public class DBList {
         return null;
     }
 
-    public Integer getInt(String name) {
-        if (cacheEnabled) {
+    public Integer getInt(String name) { return getInt(name, false); }
+
+    public Integer getInt(String name, boolean disableCache) {
+        if (cacheEnabled && !disableCache) {
             Integer cacheResult = (Integer) this.cache.get("2:" + name);
             if (cacheResult != null) {
                 return cacheResult;
@@ -87,8 +91,10 @@ public class DBList {
         return null;
     }
 
-    public Long getLong(String name) {
-        if (cacheEnabled) {
+    public Long getLong(String name) { return getLong(name, false); }
+
+    public Long getLong(String name, boolean disableCache) {
+        if (cacheEnabled && !disableCache) {
             Long cacheResult = (Long) this.cache.get("3:" + name);
             if (cacheResult != null) {
                 return cacheResult;
@@ -105,8 +111,10 @@ public class DBList {
         return null;
     }
 
-    public Double getDouble(String name) {
-        if (cacheEnabled) {
+    public Double getDouble(String name) { return getDouble(name, false); }
+
+    public Double getDouble(String name, boolean disableCache) {
+        if (cacheEnabled && !disableCache) {
             Double cacheResult = (Double) this.cache.get("4:" + name);
             if (cacheResult != null) {
                 return cacheResult;
@@ -123,8 +131,10 @@ public class DBList {
         return null;
     }
 
-    public Boolean getBoolean(String name) {
-        if (cacheEnabled) {
+    public Boolean getBoolean(String name) { return getBoolean(name, false); }
+
+    public Boolean getBoolean(String name, boolean disableCache) {
+        if (cacheEnabled && !disableCache) {
             Boolean cacheResult = (Boolean) this.cache.get("5:" + name);
             if (cacheResult != null) {
                 return cacheResult;
@@ -141,8 +151,10 @@ public class DBList {
         return null;
     }
 
-    public Float getFloat(String name) {
-        if (cacheEnabled) {
+    public Float getFloat(String name) { return getFloat(name, false); }
+
+    public Float getFloat(String name, boolean disableCache) {
+        if (cacheEnabled && !disableCache) {
             Float cacheResult = (Float) this.cache.get("6:" + name);
             if (cacheResult != null) {
                 return cacheResult;
@@ -159,8 +171,10 @@ public class DBList {
         return null;
     }
 
-    public String getStringOrDefault(String name, String defaultValue) {
-        if (cacheEnabled) {
+    public String getStringOrDefault(String name, String defaultValue) { return getStringOrDefault(name, defaultValue, false); }
+
+    public String getStringOrDefault(String name, String defaultValue, boolean disableCache) {
+        if (cacheEnabled && !disableCache) {
             String cacheResult = (String) this.cache.get("1:" + name);
             if (cacheResult != null) {
                 return cacheResult;
@@ -173,8 +187,10 @@ public class DBList {
         return value;
     }
 
-    public Integer getIntOrDefault(String name, Integer defaultValue) {
-        if (cacheEnabled) {
+    public Integer getIntOrDefault(String name, Integer defaultValue) { return getIntOrDefault(name, defaultValue, false); }
+
+    public Integer getIntOrDefault(String name, Integer defaultValue, boolean disableCache) {
+        if (cacheEnabled && !disableCache) {
             Integer cacheResult = (Integer) this.cache.get("2:" + name);
             if (cacheResult != null) {
                 return cacheResult;
@@ -187,8 +203,10 @@ public class DBList {
         return value;
     }
 
-    public Long getLongOrDefault(String name, Long defaultValue) {
-        if (cacheEnabled) {
+    public Long getLongOrDefault(String name, Long defaultValue) { return getLongOrDefault(name, defaultValue, false); }
+
+    public Long getLongOrDefault(String name, Long defaultValue, boolean disableCache) {
+        if (cacheEnabled && !disableCache) {
             Long cacheResult = (Long) this.cache.get("3:" + name);
             if (cacheResult != null) {
                 return cacheResult;
@@ -201,8 +219,10 @@ public class DBList {
         return value;
     }
 
-    public Double getDoubleOrDefault(String name, Double defaultValue) {
-        if (cacheEnabled) {
+    public Double getDoubleOrDefault(String name, Double defaultValue) { return getDoubleOrDefault(name, defaultValue, false); }
+
+    public Double getDoubleOrDefault(String name, Double defaultValue, boolean disableCache) {
+        if (cacheEnabled && !disableCache) {
             Double cacheResult = (Double) this.cache.get("4:" + name);
             if (cacheResult != null) {
                 return cacheResult;
@@ -215,8 +235,10 @@ public class DBList {
         return value;
     }
 
-    public Boolean getBooleanOrDefault(String name, Boolean defaultValue) {
-        if (cacheEnabled) {
+    public Boolean getBooleanOrDefault(String name, Boolean defaultValue) { return getBooleanOrDefault(name, defaultValue, false); }
+
+    public Boolean getBooleanOrDefault(String name, Boolean defaultValue, boolean disableCache) {
+        if (cacheEnabled && !disableCache) {
             Boolean cacheResult = (Boolean) this.cache.get("5:" + name);
             if (cacheResult != null) {
                 return cacheResult;
@@ -229,8 +251,10 @@ public class DBList {
         return value;
     }
 
-    public Float getFloatOrDefault(String name, Float defaultValue) {
-        if (cacheEnabled) {
+    public Float getFloatOrDefault(String name, Float defaultValue) { return getFloatOrDefault(name, defaultValue, false); }
+
+    public Float getFloatOrDefault(String name, Float defaultValue, boolean disableCache) {
+        if (cacheEnabled && !disableCache) {
             Float cacheResult = (Float) this.cache.get("6:" + name);
             if (cacheResult != null) {
                 return cacheResult;
@@ -289,7 +313,7 @@ public class DBList {
         if (cacheEnabled) {
             this.cache.set("1:" + name, value);
         }
-        if (getString(name) == null) {
+        if (getString(name, true) == null) {
             dbManager.getDatabase().execute("INSERT INTO " + dbManager.getDatabase().getDatabaseName() + "." + listName + " (name, type, value) VALUES ('" + name + "', 1, '" + value + "');");
         } else {
             dbManager.getDatabase().execute("UPDATE " + dbManager.getDatabase().getDatabaseName() + "." + listName + " SET value = '" + value + "' WHERE name = '" + name + "';");
@@ -300,7 +324,7 @@ public class DBList {
         if (cacheEnabled) {
             this.cache.set("2:" + name, value);
         }
-        if (getString(name) == null) {
+        if (getString(name, true) == null) {
             dbManager.getDatabase().execute("INSERT INTO " + dbManager.getDatabase().getDatabaseName() + "." + listName + " (name, type, value) VALUES ('" + name + "', 2, '" + value + "');");
         } else {
             dbManager.getDatabase().execute("UPDATE " + dbManager.getDatabase().getDatabaseName() + "." + listName + " SET value = '" + value + "' WHERE name = '" + name + "';");
@@ -311,7 +335,7 @@ public class DBList {
         if (cacheEnabled) {
             this.cache.set("3:" + name, value);
         }
-        if (getString(name) == null) {
+        if (getString(name, true) == null) {
             dbManager.getDatabase().execute("INSERT INTO '" + dbManager.getDatabase().getDatabaseName() + "." + listName + " (name, type, value) VALUES ('" + name + "', 3, '" + value + "');");
         } else {
             dbManager.getDatabase().execute("UPDATE " + dbManager.getDatabase().getDatabaseName() + "." + listName + " SET value = '" + value + "' WHERE name = '" + name + "';");
@@ -322,7 +346,7 @@ public class DBList {
         if (cacheEnabled) {
             this.cache.set("4:" + name, value);
         }
-        if (getString(name) == null) {
+        if (getString(name, true) == null) {
             dbManager.getDatabase().execute("INSERT INTO " + dbManager.getDatabase().getDatabaseName() + "." + listName + " (name, type, value) VALUES ('" + name + "', 4, '" + value + "');");
         } else {
             dbManager.getDatabase().execute("UPDATE " + dbManager.getDatabase().getDatabaseName() + "." + listName + " SET value = '" + value + "' WHERE name = '" + name + "';");
@@ -333,7 +357,7 @@ public class DBList {
         if (cacheEnabled) {
             this.cache.set("5:" + name, value);
         }
-        if (getString(name) == null) {
+        if (getString(name, true) == null) {
             dbManager.getDatabase().execute("INSERT INTO " + dbManager.getDatabase().getDatabaseName() + "." + listName + " (name, type, value) VALUES ('" + name + "', 5, '" + value + "');");
         } else {
             dbManager.getDatabase().execute("UPDATE " + dbManager.getDatabase().getDatabaseName() + "." + listName + " SET value = '" + value + "' WHERE name = '" + name + "';");
@@ -344,7 +368,7 @@ public class DBList {
         if (cacheEnabled) {
             this.cache.set("6:" + name, value);
         }
-        if (getString(name) == null) {
+        if (getString(name, true) == null) {
             dbManager.getDatabase().execute("INSERT INTO " + dbManager.getDatabase().getDatabaseName() + "." + listName + " (name, type, value) VALUES ('" + name + "', 6, '" + value + "');");
         } else {
             dbManager.getDatabase().execute("UPDATE " + dbManager.getDatabase().getDatabaseName() + "." + listName + " SET value = '" + value + "' WHERE name = '" + name + "';");

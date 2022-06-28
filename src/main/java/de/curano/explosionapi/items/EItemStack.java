@@ -110,7 +110,7 @@ public class EItemStack extends ItemStack implements Serializable {
         return this.getItemMeta().getLore();
     }
 
-    public EItemStack setInventoryClickEvent(SerializableConsumer<InventoryClickEvent> clickEvent, Timing timing) {
+    public synchronized EItemStack setInventoryClickEvent(SerializableConsumer<InventoryClickEvent> clickEvent, Timing timing) {
         ItemMeta meta = this.getItemMeta();
         if (meta == null) return this;
         PersistentDataContainer persistentDataContainer = meta.getPersistentDataContainer();
@@ -148,7 +148,7 @@ public class EItemStack extends ItemStack implements Serializable {
         return this;
     }
 
-    public EItemStack setPlayerInteractEvent(SerializableConsumer<PlayerInteractEvent> interactEvent, Timing timing) {
+    public synchronized EItemStack setPlayerInteractEvent(SerializableConsumer<PlayerInteractEvent> interactEvent, Timing timing) {
         ItemMeta meta = this.getItemMeta();
         if (meta == null) return this;
         PersistentDataContainer persistentDataContainer = meta.getPersistentDataContainer();
@@ -188,7 +188,7 @@ public class EItemStack extends ItemStack implements Serializable {
         return this;
     }
 
-    public Consumer<InventoryClickEvent> getInventoryClickEvent(Timing timing) {
+    public synchronized Consumer<InventoryClickEvent> getInventoryClickEvent(Timing timing) {
         ItemMeta meta = this.getItemMeta();
         if (meta == null) return null;
         PersistentDataContainer persistentDataContainer = meta.getPersistentDataContainer();
@@ -221,7 +221,7 @@ public class EItemStack extends ItemStack implements Serializable {
         return null;
     }
 
-    public Consumer<PlayerInteractEvent> getPlayerInteractEvent(Timing timing) {
+    public synchronized Consumer<PlayerInteractEvent> getPlayerInteractEvent(Timing timing) {
         ItemMeta meta = this.getItemMeta();
         if (meta == null) return null;
         PersistentDataContainer persistentDataContainer = meta.getPersistentDataContainer();

@@ -26,7 +26,7 @@ public class Cache {
         return ttl;
     }
 
-    private void removeOld() {
+    private synchronized void removeOld() {
         for (String key : cacheTiming.keySet()) {
             long time = cacheTiming.get(key);
             if (time + ttl < System.currentTimeMillis()) {
@@ -36,7 +36,7 @@ public class Cache {
         }
     }
 
-    public void set(String key, Object value) {
+    public synchronized void set(String key, Object value) {
         if (cache.containsKey(key)) {
             cache.replace(key, value);
             if (cacheTiming.containsKey(key)) {
@@ -54,7 +54,7 @@ public class Cache {
         }
     }
 
-    public Object get(String key) {
+    public synchronized Object get(String key) {
         if ((System.currentTimeMillis() - cacheTiming.getOrDefault(key, 0L)) < ttl) {
             return cache.get(key);
         } else {
@@ -63,13 +63,13 @@ public class Cache {
         return null;
     }
 
-    public Cache remove(String key) {
+    public synchronized Cache remove(String key) {
         cache.remove(key);
         cacheTiming.remove(key);
         return this;
     }
 
-    public Cache clear() {
+    public synchronized Cache clear() {
         cache.clear();
         cacheTiming.clear();
         return this;
