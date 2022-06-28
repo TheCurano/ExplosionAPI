@@ -38,6 +38,20 @@ Gradle: https://plugins.gradle.org/plugin/com.github.johnrengelman.shadow
 	    <artifactId>ExplosionAPI</artifactId>
 	    <version>RELEASE_TAG</version>
 	</dependency>
+
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.2.4</version>
+        <executions>
+            <execution>
+            <phase>package</phase>
+                <goals>
+                    <goal>shade</goal>
+                </goals>
+            </execution>
+        </executions>
+    </plugin>
     ```
 
 ## Register
@@ -118,7 +132,9 @@ public class Test {
 ```
 
 ## InventoryBuilder
+
 ### Be careful, Event Functions will be deleted after reloads / restarts.
+
 ```Java
 public class Test {
     public void function(Player player) {
