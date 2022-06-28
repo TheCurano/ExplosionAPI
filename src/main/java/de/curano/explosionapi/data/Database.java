@@ -44,7 +44,7 @@ public class Database {
             this.password = password;
             ExplosionAPI.LOGGER.info("Creating connection to MariaDB database...");
             try {
-                this.connection = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database + "?autoreconnect=true", this.username, this.password);
+                this.connection = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database + "?autoReconnect=true", this.username, this.password);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
