@@ -1,12 +1,12 @@
 package de.curano.explosionapi.data;
 
-import java.util.HashMap;
+import java.util.*;
 
 public class Cache {
 
     private int ttl = 30000;
-    private HashMap<String, Object> cache = new HashMap<>();
-    private HashMap<String, Long> cacheTiming = new HashMap<>();
+    private final HashMap<String, Object> cache = new HashMap<>();
+    private final HashMap<String, Long> cacheTiming = new HashMap<>();
 
     public Cache() {
 
@@ -27,11 +27,13 @@ public class Cache {
     }
 
     private synchronized void removeOld() {
-        for (String key : cacheTiming.keySet()) {
-            long time = cacheTiming.get(key);
+        Iterator<Map.Entry<String, Long>> it = cacheTiming.entrySet().iterator();
+        while (it.hasNext()) {
+            HashMap.Entry<String, Long> entry = (HashMap.Entry<String, Long>) it.next();
+            long time = entry.getValue();
             if (time + ttl < System.currentTimeMillis()) {
-                cache.remove(key);
-                cacheTiming.remove(key);
+                cache.remove(entry.getKey());
+                it.remove();
             }
         }
     }
